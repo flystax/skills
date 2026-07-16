@@ -1,6 +1,6 @@
 # PopCraft Skills
 
-[![Skill version](https://img.shields.io/badge/popcraft-v0.1.0-blue)](popcraft/SKILL.md)
+[![Skill version](https://img.shields.io/badge/popcraft-v0.2.0-blue)](popcraft/SKILL.md)
 [![Specs snapshot](https://img.shields.io/badge/model%20specs-2026--07--16-informational)](popcraft/specs/model-specs.md)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green)](LICENSE)
 [![Platform](https://img.shields.io/badge/works%20with-Claude%20Code%20%7C%20claude.ai%20%7C%20Cursor%20%7C%20Cowork-purple)](https://popcraft.ai/mcp)
@@ -76,6 +76,13 @@ The skill's hard rules, in plain terms:
   before the first paid call of a session — *always*, even if you say "skip the
   questions" (you can't consent to a price you haven't seen). After that, opt into
   auto-proceed and it stops asking but keeps reporting each cost.
+- **Don't want to be asked at all? Say "express mode".** An explicit opt-in switches
+  to quality-first, zero-questions operation: the skill picks the best models and
+  generates immediately, reporting each item's cost as it's delivered. A safety
+  ceiling still applies (it checks in if a single task exceeds 300 credits or the
+  session's express spend crosses 1,000 — set your own with "express mode, budget
+  3000"). Say "standard mode" to switch back. Express never activates by inference —
+  only when you ask for it.
 - **Prices come from the API, never from memory.** `get_cost` previews are free.
 - **Failures are reported honestly** — failed tasks auto-refund server-side, and the
   skill points you at the transaction ledger to verify rather than promising numbers.

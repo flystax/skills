@@ -11,7 +11,7 @@ description: >
 user-invocable: true
 metadata:
   tags: [popcraft, video, image, audio, generation, seedance, kling, veo, prompt, mcp]
-  version: 0.1.0
+  version: 0.2.0
   updated: 2026-07-16
   author: PopCraft
   requires:
@@ -57,15 +57,20 @@ training-data memory about a platform whose lineup changes monthly.
 2. **R2 — Read the routed reference first.** Before the first use of a module in a
    conversation, read its `references/*.md` file (see routing table). Grepped snippets
    don't count; read the file.
-3. **R3 — No un-previewed spend.** Before the session's FIRST credit-charging call
-   (`popcraft_generate_*`, `popcraft_upscale_*`): preview with `get_cost: true`, present
-   the plan (tool · model · params · credits), and ask ONE combined question — "proceed?
-   + auto-proceed for the rest of this session?". After an explicit auto-proceed, skip
-   the asking but still preview and report cost per task. **The first confirm is never
-   waived** — an upfront "just do it / skip the questions" earns auto-proceed for the
-   REST of the session and a zero-interrogation Fast Path, but the first paid call still
-   gets the one combined question with the exact cost (keep it to one line for an
-   impatient user). The user cannot consent to a price they haven't seen.
+3. **R3 — No un-previewed spend.** The `get_cost: true` preview is mandatory before
+   EVERY submission, in every mode — it's free. What changes by mode is the *asking*:
+   - **Standard mode (default):** before the session's FIRST credit-charging call
+     (`popcraft_generate_*`, `popcraft_upscale_*`), present the plan (tool · model ·
+     params · credits) and ask ONE combined question — "proceed? + auto-proceed for the
+     rest of this session?". After an explicit auto-proceed, skip the asking but still
+     preview and report cost per task. **The first confirm is never waived in Standard
+     mode** — an upfront "just do it / skip the questions" earns auto-proceed for the
+     REST of the session and a zero-interrogation Fast Path, but the first paid call
+     still gets the one combined question with the exact cost (one line for an
+     impatient user). The user cannot consent to a price they haven't seen.
+   - **Express mode (explicit opt-in only):** no per-task confirms below the ceiling —
+     see § Modes. The mode acknowledgment is the consent; silent preview + after-the-fact
+     cost reporting remain mandatory.
 4. **R4 — Director-grade prompt.** Every generation uses the house formula
    (Subject · Action · Scene · Camera · Style, + Audio cue on native-audio video models)
    with model-specific adjustments from [references/prompt-craft.md](references/prompt-craft.md) —
@@ -102,6 +107,34 @@ training-data memory about a platform whose lineup changes monthly.
 Resist loading the whole library — the user pays for your context.
 
 ---
+
+## Modes — Standard (default) vs Express
+
+Two operating modes. **Standard is always the default**; Express exists for users who
+don't want to be bothered with details and are happy to pay for quality.
+
+| | **Standard (default)** | **Express** |
+|---|---|---|
+| Model choice | Fit-first: smart routing / cheapest adequate for the brief | **Quality-first**: the best-fit pro-tier model from specs (e.g. `seedance-2-0` for video, `nano-banana-pro`/`gpt-image-2` for images by task) |
+| Questions | Fast/Full path rules below | **Never ask** — always Fast Path; state the choices in the delivery, not before |
+| Cost confirm | First paid call always confirmed (R3) | **No per-task confirms** below the ceiling |
+| Cost preview | Always (`get_cost:true`, free) | **Still always** — silent; actual credits reported with each delivery |
+| Ceiling | — | If a single task quotes **> 300 credits**, or the session's running Express total crosses **1,000 credits**, confirm before proceeding — unless the user set their own budget/limit at activation ("express mode, budget 3000" / "no limit") |
+
+**Activation — explicit only.** Enter Express ONLY on a clear mode request: "express
+mode", "best mode", "quality mode, don't ask", "stop asking about costs, just make
+everything the best". On activation, acknowledge ONCE what it means:
+*"Express mode on — I'll pick the best models and generate without asking. You'll see
+the cost of each item as it's delivered; I'll only check in if something crosses
+<ceiling>. Say 'standard mode' to switch back."* That acknowledgment is the consent.
+
+**NOT activation:** impatience phrases ("just do it", "skip the questions", "hurry")
+stay in Standard mode — they earn auto-proceed per R3, which still includes the first
+cost confirm. Never infer Express; never suggest it as a way to skip a confirm the
+user is currently being asked.
+
+**Deactivation:** "standard mode" / "start asking again" — takes effect immediately.
+Mode is session-scoped; never carry it into a new session.
 
 ## Fast Path vs Full Path
 
